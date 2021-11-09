@@ -1,0 +1,117 @@
+* {
+  padding: 0;
+  margin: 0;
+  background-origin: padding-box;
+  font-family: "Poppins", sans-serif;
+}
+
+html {
+  font-size: 1vw;
+  background: url("./largeScreen-bg.jpg");
+  background-size: cover;
+}
+
+.calc-container {
+  position: absolute;
+  background-color: rgba(29, 29, 29, 0.7);
+  margin: 8vw 5vw 5vw 25vw;
+  width: 50vw;
+  border-radius: 2vw;
+}
+
+.output {
+  width: 100%;
+}
+
+.operation {
+  width: 50vw;
+  height: 5vw;
+  color: #878787;
+  font-size: 2vw;
+  position: relative;
+  overflow: hidden;
+}
+.operation .value {
+  position: absolute;
+  bottom: 0.5vw;
+  right: 1vw;
+  padding-right: 2vw;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.result {
+  width: 50vw;
+  height: 8vw;
+  color: #fff;
+  font-size: 2vw;
+  overflow: hidden;
+  position: relative;
+}
+
+.result .value {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 1vw;
+  padding-right: 2vw;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.input {
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 0 0 2vw 2vw;
+  border: 0.5vw solid rgb(59, 148, 207);
+}
+
+.row {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.row button {
+  width: 5vw;
+  height: 3.5vw;
+  font-size: 1.5vw;
+  border: none;
+  border-radius: 50%;
+  margin: 0.8vw;
+  cursor: pointer;
+  background-color: rgb(255, 255, 255, 0.5);
+}
+
+.row button:hover {
+  font-weight: bold;
+  background-color: rgb(144, 231, 243);
+}
+
+.row #calculate {
+  color: #fff;
+  background-color: #46e0bc;
+  width: 12vw;
+  border-radius: 5vw;
+}
+.row #delete {
+  color: #fff;
+  background-color: #e05046;
+}
+
+#division,
+#multiplication,
+#subtraction,
+#addition {
+  color: #18b893;
+}
+
+.input button span {
+  font-size: 0.6vw;
+  position: absolute;
+}
+
+.active-angle {
+  background-color: #1d1d1d !important;
+  color: #fff !important;
+  border-radius: 1vw !important;
+}
