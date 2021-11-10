@@ -1,0 +1,63 @@
+
+/* CSS Code */
+/* Heading */
+h1 {
+    color: red;
+    font-size: 45px;
+}
+
+/* 3*3 Grid */
+#b1, #b2, #b3, #b4, #b5,
+#b6, #b7, #b8, #b9 {
+    width: 75px;
+    height: 52px;
+    margin: auto;
+    border: 1px solid lightslategrey;
+    border-radius: 6px;
+    font-size: 30px;
+    text-align: center;
+}
+
+/* Reset Button */
+#but {
+    background-color: black;
+    width: 150px;
+    height: 50px;
+    font-size: 25px;
+    color: lightpink;
+    box-shadow: 2px 2px 2px 2px gray;
+    border: 2px solid gray;
+}
+#but:hover
+{
+    background-color: darkolivegreen;
+}
+
+/* Player turn space */
+#print {
+    font-family: Arial, Helvetica, sans-serif;
+
+    color: darkorchid;
+    font-size: 30px;
+}
+
+/* Main Container */
+#main {
+    text-align: center;
+    background-image: url("./tic.jfif");
+    background-size: cover;
+}
+
+/* Game Instruction Text */
+#ins {
+    font-family: Verdana,
+        Geneva, Tahoma, sans-serif;
+         
+    color:darkblue;
+    font-size: 20px;
+}
+@keyframes larger{ from{height: 75px; width: 125px;} to{height: 100px;width: 250px;}}  
+@-webkit-keyframes larger{ from{height: 75px; width: 125px;} to{height: 100px;width: 250px;}}  
+@-moz-keyframes larger{ from{height: 75px; width: 125px;} to{height: 100px;width: 250px;}}  
+@keyframes larger{ from{height: 75px; width: 125px;} to{height: 100px;width: 250px;}} 
+
