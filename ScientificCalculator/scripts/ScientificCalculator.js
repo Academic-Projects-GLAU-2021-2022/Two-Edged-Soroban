@@ -277,3 +277,255 @@ function angleToggler() {
   radianButton.classList.toggle("active-angle");
   degreeButton.classList.toggle("active-angle");
 }
+
+inputElement.addEventListener("click", (event) => {
+  const targetButton = event.target;
+
+  calculatorButtons.forEach((button) => {
+    if (button.name == targetButton.id) calculator(button);
+  });
+});
+
+function calculator(button) {
+  if (button.type == "operator") {
+    data.operation.push(button.symbol);
+    data.formula.push(button.formula);
+  } else if (button.type == "number") {
+    data.operation.push(button.symbol);
+    data.formula.push(button.formula);
+  } else if (button.type == "trigonometricFunction") {
+    data.operation.push(button.symbol + "(");
+    data.formula.push(button.formula);
+  } else if (button.type == "mathFunction") {
+    let symbol, formula;
+
+    if (button.name == "factorial") {
+      symbol = "!";
+      formula = button.formula;
+
+      data.operation.push(symbol);
+      data.formula.push(formula);
+    } else if (button.name == "power") {
+      symbol = "^(";
+      formula = button.formula;
+
+      data.operation.push(symbol);
+      data.formula.push(formula);
+    } else if (button.name == "square") {
+      symbol = "^(";
+      formula = button.formula;
+
+      data.operation.push("2)");
+      data.formula.push("2)");
+    } else {
+      symbol = button.symbol + "(";
+      formula = button.formula + "(";
+
+      data.operation.push(symbol);
+      data.formula.push(formula);
+    }
+  } else if (button.type == "key") {
+    if (button.name == "clear") {
+      data.operation = [];
+      data.formula = [];
+
+      updateOutputResult(0);
+    } else if ((button.name = "delete")) {
+      data.operation.pop();
+      data.formula.pop();
+    } else if (button.name == "rad") {
+      RADIAN = true;
+      angleToggler();
+    } else if (button.name == "deg") {
+      RADIAN = false;
+      angleToggler();
+    }
+  } else if (button.type == "calculate") {
+    formulaString = data.formula.join("");
+
+    let POWER_SEARCH_RESULT = search(data.formula, POWERS);
+    let FACTORIAL_SEARCH_RESULT = search(data.formula, FACTORIAL);
+
+    const BASES = powerBaseGetter(data.formula, POWER_SEARCH_RESULT);
+    BASES.forEach((base) => {
+      let toReplace = base + POWERS;
+      let replacement = "Math.pow(" + base + ",";
+      formulaString = formulaString.replace(toReplace, replacement);
+    });
+
+    const NUMBERS = factorialNumberGetter(
+      data.formula,
+      FACTORIAL_SEARCH_RESULT
+    );
+    NUMBERS.forEach((factorial) => {
+      formulaString = formulaString.replace(
+        factorial.toReplace,
+        factorial.replacement
+      );
+    });
+
+    let result;
+    try {
+      result = eval(formulaString);
+    } catch (error) {
+      if (error instanceof SyntaxError) {
+        result = "Syntax Error!";
+        updateOutputResult(result);
+        return;
+      }
+    }
+
+    ans = result;
+    data.operation = [result];
+    data.formula = [result];
+
+    updateOutputResult(result);
+    return;
+  }
+  updateOutputOperation(data.operation.join(""));
+}
+
+function factorialNumberGetter(formula, FACTORIAL_SEARCH_RESULT) {
+  let numbers = [];
+  let factorial_sequence = 0;
+
+  FACTORIAL_SEARCH_RESULT.forEach((factorial_index) => {
+    let number = [];
+
+    let nextIndex = factorial_index + 1;
+    let nextInput = formula[nextIndex];
+
+    if (nextIndex == FACTORIAL) {
+      factorial_sequence += 1;
+      return;
+    }
+
+    let first_factorial_index = factorial_index - factorial_sequence;
+
+    let previousIndex = first_factorial_index - 1;
+
+    let paranthesisCount = 0;
+
+    while (previousIndex >= 0) {
+      if (formula[previousIndex] == "(") paranthesisCount--;
+      if (formula[previousIndex] == ")") paranthesisCount++;
+      let isOperator = false;
+      OPERATORS.forEach((OPERATOR) => {
+        if (formula[previousIndex] == OPERATOR) isOperator = true;
+      });
+
+      if (isOperator && paranthesisCount == 0) break;
+
+      number.unshift(formula[previousIndex]);
+      previousIndex--;
+    }
+    let number_str = number.join("");
+    const factorial = "factorial(",
+      close_parenthesis = ")";
+    let times = factorial_sequence + 1;
+
+    let toReplace = number_str + FACTORIAL.repeat(times);
+    let replacement =
+      factorial.repeat(times) + number_str + close_parenthesis.repeat(times);
+
+    numbers.push({
+      toReplace: toReplace,
+      replacement: replacement,
+    });
+
+    factorial_sequence = 0;
+  });
+  return numbers;
+}
+
+function powerBaseGetter(formula, POWER_SEARCH_RESULT) {
+  let power_bases = [];
+  POWER_SEARCH_RESULT.forEach((power_index) => {
+    let base = [];
+    let paranthesisCount = 0;
+    let previousIndex = power_index - 1;
+
+    while (previousIndex >= 0) {
+      if (formula[previousIndex] == "(") paranthesisCount--;
+      if (formula[previousIndex] == ")") paranthesisCount++;
+      let isOperator = false;
+      OPERATORS.forEach((OPERATOR) => {
+        if (formula[previousIndex] == OPERATOR) isOperator = true;
+      });
+
+      let isPower = formula[previousIndex] == POWERS;
+      if ((isOperator && paranthesisCount == 0) || isPower) break;
+
+      base.unshift(formula[previousIndex]);
+      previousIndex--;
+    }
+    power_bases.push(base.join(""));
+  });
+  return power_bases;
+}
+
+function search(array, keyword) {
+  let search_result = [];
+  array.forEach((element, index) => {
+    if (element == keyword) search_result.push(index);
+  });
+  return search_result;
+}
+
+function updateOutputOperation(operation) {
+  outputOperationElement.innerHTML = operation;
+}
+
+function updateOutputResult(result) {
+  outputResultElement.innerHTML = result;
+}
+
+function factorial(number) {
+  if (number % 1 != 0) {
+    return gamma(number + 1);
+  }
+  if (number === 0 || number === 1) return 1;
+  let result = 1;
+  for (let i = 1; i <= number; i++) {
+    result *= i;
+    if (result === Infinity) return Infinity;
+  }
+  return result;
+}
+
+function gamma(n) {
+  // accurate to about 15 decimal places
+  //some magic constants
+  var g = 7, // g represents the precision desired, p is the values of p[i] to plug into Lanczos' formula
+    p = [
+      0.99999999999980993, 676.5203681218851, -1259.1392167224028,
+      771.32342877765313, -176.61502916214059, 12.507343278686905,
+      -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7,
+    ];
+  if (n < 0.5) {
+    return Math.PI / Math.sin(n * Math.PI) / gamma(1 - n);
+  } else {
+    n--;
+    var x = p[0];
+    for (var i = 1; i < g + 2; i++) {
+      x += p[i] / (n + i);
+    }
+    var t = n + g + 0.5;
+    return Math.sqrt(2 * Math.PI) * Math.pow(t, n + 0.5) * Math.exp(-t) * x;
+  }
+}
+
+function trigo(callback, angle) {
+  if (!RADIAN) {
+    angle = (angle * Math.PI) / 180;
+  }
+  return callback(angle);
+}
+
+function inv_trigo(callback, value) {
+  let angle = callback(value);
+  if (!RADIAN) {
+    angle = (angle * 180) / Math.PI;
+  }
+  return angle;
+}
